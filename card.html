@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link rel="stylesheet" href="custom.css">
+    <script>
+        trip = {
+            'header': 'Izlet na ' + "{{ header }}",
+            'stars': "{{ stars }}",
+            'description': "{{ description }}",
+            'location': "{{ place }}",
+             'start': "{{ start }}",
+            'duration': "{{ duration }}",
+            'nrOfPeople': "{{ numPeople }}",
+            'priceFrom': "{{ priceFrom }}",
+            'priceTo': "{{ priceTo }}",
+            'transport': "{{ transport }}",
+            'transportTable': "{{ transportTable }}" 
+          };
+      
+        function makeTripCard(trip) {
+          if(trip.transport === 'Car') {
+            transportIcon = 'fa-car';
+          } else if(trip.transport === 'Walking') {
+            transportIcon = 'fa-walking';
+          } else if(trip.transport === 'Bus') {
+            transportIcon = 'fa-bus';
+          }
+
+            buttons = `
+              <div class="trip-card-buttons">
+                <button onclick="getNewTrip()" class="btn">Get new trip!</button>
+                <button onclick="submitTrip()" class="btn">Submit data!</button>
+              </div>`;
+
+            card = `<div class="trip-container col-md-4" id="trip-container-01">
+                  <div class="trip-card">
+                    <div class="trip-name">
+                      <div class="trip-name-title" id="idTripName">
+                        ${trip.header}
+                      </div>
+                    </div>
+                  
+                    <div class="trip-rating">
+                      ${'<i class="far fa-star"></i>'.repeat(trip.stars)}
+                    </div>
+                
+                    <div class="trip-description">
+                      ${trip.description}
+                    </div>
+                  
+                    <div class="trip-misc">
+                      <div class="trip-misc-container">
+                      <div class="trip-misc-name"> <i class="fas fa-flag"></i> Trip location:</div>
+                      <div class="trip-misc-value">${trip.location}</div>
+                    </div>
+					
+					
+					<div class="trip-misc-container">
+                      <div class="trip-misc-name"> <i class="fas fa-calendar-alt"></i> Trip start:</div>
+                     
+                      <select name="start" id="idTripStart">
+						  % for d in start:
+							<option value= "{{ d }}" SELECTED>{{ d }}</option>
+						  % end
+					 </select>
+					 
+                      <div class="trip-misc-value"></div>
+                    </div>
+                  
+                    <div class="trip-misc-container">
+                      <div class="trip-misc-name"> <i class="fas fa-clock"></i> Trip duration:</div>
+                      
+                      <select name="duration" id="idTripDuration">
+						  % for d in duration:
+							<option value= "{{ d }}" SELECTED>{{ d }}</option>"
+						  % end
+					 </select>
+					 
+                    </div>
+                  
+                    <div class="trip-misc-container">
+                      <div class="trip-misc-name"><i class="fas fa-users"></i> Trip suitable for:</div>
+                      
+                      <select name="numPeople" id="idNumPeople">
+						  % for d in numPeople:
+							<option value= "{{ d }}">{{ d }}</option>
+						  % end
+					 </select>
+					 
+                    </div>
+                  
+                    <div class="trip-misc-container">
+                      <div class="trip-misc-name"><i class="fas fa-euro-sign"></i> Trip price range:</div>
+                      From:
+                      <select name="priceFrom" id="idpriceFrom">
+						  % for d in priceFrom:
+							<option value= "{{ d }}">{{ d }}</option>
+						  % end
+					 </select>
+					 To: 
+					 <select name="priceTo" id="idpriceTo">
+						  % for d in priceTo:
+							<option value= "{{ d }}">{{ d }}</option> 
+						  % end
+					 </select>
+					 EUR
+					 
+                    </div>
+
+                    <div class="trip-misc-container">
+						
+						
+						
+                      <div class="trip-misc-name"><i class="fas fa-road"></i> Trip transport:</div>
+                      
+					 <div>
+							<i class="fas ${transportIcon}"></i>
+							<select name="transport" id="idTransport" onchange="document.getElementById('transportIcon') = this.value">
+							% for d in transportTable:
+								% if d == transport:
+									<option value= "{{ d }}" selected="selected" >{{ d }}</option>
+								% else:
+									<option value= "{{ d }}" >{{ d }}</option>
+								% end
+							% end
+							</select>
+						
+					  </div>
+                
+                    </div>
+                   
+                   
+                  </div>
+					
+
+                  ${buttons}
+
+                </div>
+              </div>`
+
+            return card;
+        }
+    
+    
+    function setup() {
+           document.getElementById('container').innerHTML = makeTripCard(trip);
+           console.log('loaded');
+        }
+
+    function getNewTrip() {
+            /* We can call refresh */
+            console.log('refresh');
+            location.reload();        
+        }
+
+    function submitTrip(select) {
+            
+            
+            var eTransport = document.getElementById('idTransport');
+            var ebTransport = eTransport.options[eTransport.selectedIndex].text;
+			
+			            
+            var ePriceFrom = document.getElementById('idpriceFrom');
+            var ebPriceFrom = ePriceFrom.options[ePriceFrom.selectedIndex].text;
+            
+            var ePriceTo = document.getElementById('idpriceTo');
+            var ebPriceTo = ePriceTo.options[ePriceTo.selectedIndex].text;
+            
+            var eNumPeople = document.getElementById('idNumPeople');
+            var ebNumPeople = eNumPeople.options[eNumPeople.selectedIndex].text;
+            
+            var eTripDuration = document.getElementById('idTripDuration');
+            var ebTripDuration = eTripDuration.options[eTripDuration.selectedIndex].text;
+            
+            var eTripStart = document.getElementById('idTripStart');
+            var ebTripStart = eTripStart.options[eTripStart.selectedIndex].text;
+            
+            alert(
+
+            "Trip start: " + ebTripStart + "\n" +
+            "Trip duration: " + ebTripDuration + "\n" +
+            "Number of people: " + ebNumPeople + "\n" +
+            "Transport: " + ebTransport + "\n" +
+            "Price From: " + ebPriceFrom + " EUR\n" +
+            "Price To: " + ebPriceTo + " EUR\n"
+
+                
+            );
+            
+              
+        }
+    </script>
+
+</head>
+<body onload="setup()">
+    <div id="container"></div>
+</body>
+</html>
