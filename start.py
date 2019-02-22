@@ -4,7 +4,6 @@ from bottle import *
 import sqlite3
 import json
 import random
-import html2text
 import re
 from datetime import date
 
@@ -41,11 +40,8 @@ def getRandomDate():
 	random_day = date.fromordinal(random.randint(start_dt, end_dt))
 	return random_day
 	
-def getRandomDuration():
-	var = random.randrange(6)+1
+
 	
-
-
 def getData():
 	conn = sqlite3.connect('slovenia_db')
 	c = conn.cursor()
@@ -57,8 +53,5 @@ def getData():
 def stylesheets(filename):
     return static_file(filename, root='/')
 
-@route('/to')
-def todo_list():
-	return str(html2text.html2text(getData()[9]))
     
 run(host='localhost', port=8080, debug=True)
